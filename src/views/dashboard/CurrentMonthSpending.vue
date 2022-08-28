@@ -11,11 +11,13 @@
 
 <script setup lang="ts">
 import useCurrentMonthSpendingStore from '@/store/dashboard/currentMonthSpending';
+import useDashboardStore from '@/store/dashboard/useDashboardStore';
 import { computed } from '@vue/reactivity';
 import { ElLoading } from 'element-plus';
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 
 const store = useCurrentMonthSpendingStore()
+const dashboardStore = useDashboardStore()
 
 const monthShow = computed(() => {
   console.log(store.month);
@@ -27,6 +29,10 @@ const monthShow = computed(() => {
 })
 
 onMounted(async() => {
+  await handleGetData()
+})
+
+const handleGetData = async () => {
   const loading = ElLoading.service({
     lock: true,
     text: 'Mendapatkan data pengeluaran bulan ini...',
@@ -34,5 +40,11 @@ onMounted(async() => {
   })
   await store.getCurrentMonthSpending()
   loading.close()
-})
+  dashboardStore.setIsPageReload(false)
+  console.log('update',store.month);
+} 
+
+watch(() => dashboardStore.isPageReload, (first) => {
+  if (first) handleGetData()
+});
 </script>

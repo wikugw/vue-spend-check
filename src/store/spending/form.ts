@@ -92,19 +92,6 @@ const useSpendFormStore = defineStore('spendForm', {
         // doc.data() will be undefined in this case
         console.log("No such document!");
       }
-      // // const year = await addYear(now.currYear, Number(this.form.amount))
-      // // const month = await addMonth(now.currMonth, Number(this.form.amount), year.yearId)
-      // // const date = await addDate(now.currDay, Number(this.form.amount), year.yearId, month.monthId)
-      
-      // this.form.createdAt = new Date()
-      // const {id, ...postDataForm} = this.form
-      // await addDoc(collection(db, 'spending'), {
-      //   ...postDataForm,
-      //   ...year,
-      //   ...month,
-      //   ...date
-      // })
-      
       this.resetForm()
     }
   },

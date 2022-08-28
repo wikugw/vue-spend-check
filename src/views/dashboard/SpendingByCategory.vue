@@ -9,18 +9,29 @@
 
 <script setup lang="ts">
 import useSpendByCategoryStore from '@/store/dashboard/spendByCategory';
+import useDashboardStore from '@/store/dashboard/useDashboardStore';
 import { ElLoading } from 'element-plus';
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 
 const store = useSpendByCategoryStore()
+const dashboardStore = useDashboardStore()
 
 onMounted(async() => {
+  handleGetData()
+})
+
+const handleGetData = async () => {
   const loading = ElLoading.service({
     lock: true,
     text: 'Mendapatkan data pengeluaran bulan ini...',
     background: 'rgba(0, 0, 0, 0.7)',
   })
-  store.getSpendingByCategory()
+  await store.getSpendingByCategory()
   loading.close()
-})
+  dashboardStore.setIsPageReload(false)
+}
+
+watch(() => dashboardStore.isPageReload, (first) => {
+  if (first) handleGetData()
+});
 </script>

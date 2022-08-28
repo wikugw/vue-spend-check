@@ -57,4 +57,25 @@ export const updateAmountYear = async (currYear: number, newAmount: number, oldA
   return year
 }
 
+export const reduceAmountYear = async (currYear: number, newAmount: number) => {
+  const q = query(collection(db, "year"), where("year", "==", Number(currYear)))
+  const yearQuerySnapshot = await getDocs(q);
+  let year = {
+    yearId: '',
+    year: currYear
+  }
+  let totalYearSpending = 0
+  yearQuerySnapshot.forEach((doc) => {
+    year = {
+      yearId: doc.id,
+      year: doc.data().year
+    }
+    totalYearSpending = doc.data().total;
+  });
+  console.log('update year total', year.yearId, totalYearSpending);
+  await updateDoc(doc(db, "year", year.yearId), {
+    total: totalYearSpending - Number(newAmount)
+  })
+  return year
+}
 export default addYear

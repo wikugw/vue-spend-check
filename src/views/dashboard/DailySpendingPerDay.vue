@@ -7,25 +7,32 @@
       <div v-for="item in day.SpendingItems" :key="item.id">
         {{ item.name }} - Rp.{{ item.amount }} 
         <el-button type="success" :icon="Edit" circle @click="handleRedirectEdit(item)" />
+        <el-button type="danger" :icon="Remove" circle @click="handleRemove(item)" />
       </div>
     </Accordion>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue';
+import { h, onMounted, onUnmounted, watch } from 'vue';
 import Accordion from '@/components/Accordion.vue';
 import useDailtSpentPerMonthStore from '@/store/dashboard/dailySpentPerMonth';
-import { ElLoading } from 'element-plus';
-import { Edit } from '@element-plus/icons-vue'
+import { ElLoading, ElNotification } from 'element-plus';
+import { Edit, Remove } from '@element-plus/icons-vue'
 import { SpendingItem } from '@/type/SpendingItems';
 import useSpendFormStore from '@/store/spending/form';
 import { useRouter } from 'vue-router';
+import useDashboardStore from '@/store/dashboard/useDashboardStore'
 
 const store = useDailtSpentPerMonthStore()
 const router = useRouter()
 const fromStore = useSpendFormStore()
+const dashboardStore = useDashboardStore()
 onMounted(async () => {
+  await handleGetData()
+})
+
+const handleGetData = async () => {
   const loading = ElLoading.service({
     lock: true,
     text: 'Mendapatkan data pengeluaran bulan ini...',
@@ -33,10 +40,31 @@ onMounted(async () => {
   })
   await store.getDailySpent()
   loading.close()
-})
+  dashboardStore.setIsPageReload(false)
+}
 
 const handleRedirectEdit = (item: SpendingItem) => {
   fromStore.editSpending(item)
   router.push({ name: 'Edit'})
 }
+
+const handleRemove = async (item: SpendingItem) => {
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Menghapus data pengeluaran...',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+  await store.removeSpendingItem(item).then(() => {
+    loading.close()
+    ElNotification({
+      title: 'Success',
+      message: h('i', { style: 'color: teal' }, 'Berhasil menghapus pengeluaran'),
+    })
+  })
+  dashboardStore.setIsPageReload(true)
+}
+
+watch(() => dashboardStore.isPageReload, (first) => {
+  if (first) handleGetData()
+});
 </script>
