@@ -1,6 +1,7 @@
 export type SpendingItem = {
-  amount: number,
-  createdAt: String,
+  amount: number | null,
+  createdAt: string | Date,
   name: string,
-  type: string
+  type: string,
+  id: string
 }

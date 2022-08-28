@@ -27,9 +27,9 @@
             </el-form-item>
           </div>  
         </div>
-        <button @click.prevent="resetForm(ruleFormRef)" class="text-white bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-1 my-1">Back</button>
+        <button @click.prevent="handleBackToHome" class="text-white bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-1 my-1">Back</button>
         <button @click.prevent="resetForm(ruleFormRef)" class="text-white bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-1 my-1">Reset</button>
-        <button @click.prevent="submitForm(ruleFormRef)" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-1 my-1">Submit</button>
+        <button @click.prevent="submitForm(ruleFormRef)" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-1 my-1">Update</button>
     </el-form>
   </div>
 </template>
@@ -99,9 +99,9 @@ const handlePostSpending = () => {
     text: 'Menambah data pengeluaran...',
     background: 'rgba(0, 0, 0, 0.7)',
   })
-  formStore.postSpending().then(() => {
+  formStore.putSpending().then(() => {
     loading.close()
-    router.push({ name: 'home'})
+    handleBackToHome()
     ElNotification({
       title: 'Success',
       message: h('i', { style: 'color: teal' }, 'Berhasil menambah pengeluaran'),
@@ -114,6 +114,10 @@ const onlyNumber = ($event) => {
   if ((keyCode < 48 || keyCode > 57)) {
     $event.preventDefault();
   }
+}
+
+const handleBackToHome = () => {
+  router.push({ name: 'home'})
 }
 
 onUnmounted(() => {

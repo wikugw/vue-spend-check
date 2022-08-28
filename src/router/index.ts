@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/dashboard/Index.vue";
 import AddSpend from "../views/spend-form/Index.vue"
+import EditSpend from "../views/spend-form/Edit.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -21,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/add",
     name: "Add",
     component: AddSpend,
+  },
+  {
+    path: "/edit",
+    name: "Edit",
+    component: EditSpend,
   },
 ];
 

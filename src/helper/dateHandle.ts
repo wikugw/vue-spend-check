@@ -42,4 +42,31 @@ const addDate = async (currDate: number, amount: number, yearId: string, monthId
   return date
 }
 
+export const updateDate = async (currDate: number, newAmount: number, yearId: string, monthId: string, oldAmount: number) => {
+  const q = query(
+    collection(db, "date"), 
+    where("date", "==", Number(currDate)),
+    where("yearId", "==", yearId),
+    where("monthId", "==", monthId),
+  )
+  const dateQuerySnapshot = await getDocs(q);
+  let date = {
+    dateId: '',
+    date: currDate
+  }
+  let totalDateSpending = 0
+  dateQuerySnapshot.forEach((doc) => {
+    date = {
+      dateId: doc.id,
+      date: doc.data().date
+    }
+    totalDateSpending = doc.data().total;
+  });
+  console.log('update date total', date.dateId, totalDateSpending);
+  await updateDoc(doc(db, "date", date.dateId), {
+    total: (totalDateSpending - Number(oldAmount)) + Number(newAmount)
+  })
+  return date
+}
+
 export default addDate

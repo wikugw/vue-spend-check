@@ -41,6 +41,7 @@ const useDailtSpentPerMonthStore = defineStore('dailySpentPerMonth', {
                 SpendingItems: []
               }
               const spendingItem: SpendingItem = {
+                id: el.id,
                 amount: el.data().amount,
                 createdAt: el.data().createdAt,
                 name: el.data().name,
@@ -51,6 +52,7 @@ const useDailtSpentPerMonthStore = defineStore('dailySpentPerMonth', {
             } else {
               spendingDay.total = Number(spendingDay.total) + Number(el.data().amount)
               const spendingItem: SpendingItem = {
+                id: el.id,
                 amount: el.data().amount,
                 createdAt: el.data().createdAt,
                 name: el.data().name,
