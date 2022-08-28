@@ -1,7 +1,7 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/add">Add Spending</router-link>
   </div>
   <router-view />
 </template>
@@ -12,7 +12,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  background-color: gainsboro;
   color: #2c3e50;
+  min-height: 100vh;
 }
 
 #nav {
