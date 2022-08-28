@@ -31,6 +31,7 @@ const useSpendFormStore = defineStore('spendForm', {
   actions: {
     async postSpending() {
       const now = getDateNow()
+      console.log(this.form.amount);
       const year = await addYear(now.currYear, Number(this.form.amount))
       const month = await addMonth(now.currMonth, Number(this.form.amount), year.yearId)
       const date = await addDate(now.currDay, Number(this.form.amount), year.yearId, month.monthId)

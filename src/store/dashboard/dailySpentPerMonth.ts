@@ -20,7 +20,7 @@ const useDailtSpentPerMonthStore = defineStore('dailySpentPerMonth', {
         this.dailySpentArr = []
         const now = getDateNow()
         this.month = now.currMonthName
-        console.log('now', now);
+        // console.log('now', now);
         const q = query(
           collection(db, "spending"), 
           where("year", "==", now.currYear),
@@ -29,11 +29,11 @@ const useDailtSpentPerMonthStore = defineStore('dailySpentPerMonth', {
         const dateQuerySnapshot = await getDocs(q);
         if(!dateQuerySnapshot.empty) {
           dateQuerySnapshot.forEach((el) => {
-            console.log('🙈', el.id, el.data().name, el.data().type, el.data().date);
+            // console.log('🙈', el.id, el.data().name, el.data().type, el.data().date);
             const spendingDay = this.dailySpentArr.find((day) => {
               return day.date == el.data().date
             })
-            // console.log('hasil', spendingDay)
+            console.log('hasil', spendingDay)
             if (!spendingDay) {
               const newSpendingType: DailySpent = {
                 date: el.data().date,
@@ -60,10 +60,10 @@ const useDailtSpentPerMonthStore = defineStore('dailySpentPerMonth', {
             }
           })
         }
-        console.log(this.dailySpentArr);
+        // console.log(this.dailySpentArr);
         this.dailySpentArr = _.orderBy(this.dailySpentArr, ['date'], ['desc']);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   },

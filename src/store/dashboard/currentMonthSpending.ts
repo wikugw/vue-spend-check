@@ -15,13 +15,13 @@ const useCurrentMonthSpendingStore = defineStore('currentMonthSpendding', {
     async getCurrentMonthSpending() {
       try {
         const now = getDateNow()
-        this.month = now.currMonthName
         // console.log('now', now);
         const q = query(
           collection(db, "month"), 
           where("monthNumber", "==", now.currMonth),
         )
         const dateQuerySnapshot = await getDocs(q);
+        this.month = now.currMonthName
         if(!dateQuerySnapshot.empty) {
           dateQuerySnapshot.forEach((el) => {
             // console.log(el.id, el.data().name, el.data().type);

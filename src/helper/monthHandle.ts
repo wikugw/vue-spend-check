@@ -16,7 +16,7 @@ const addMonth = async (currMonth: number, amount: number, yearId: string) => {
     console.log('month empty', currMonth);
     const newMonth = await addDoc(collection(db, 'month'), {
       monthNumber: currMonth,
-      total: 0,
+      total: amount,
       yearId: yearId
     })
     month = {

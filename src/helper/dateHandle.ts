@@ -17,7 +17,7 @@ const addDate = async (currDate: number, amount: number, yearId: string, monthId
     console.log('date empty', currDate);
     const newDate = await addDoc(collection(db, 'date'), {
       date: currDate,
-      total: 0,
+      total: amount,
       yearId: yearId,
       monthId: monthId,
     })

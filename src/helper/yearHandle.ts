@@ -12,7 +12,7 @@ const addYear = async (currYear: number, amount: number) => {
     console.log('year empty', currYear);
     const newYear = await addDoc(collection(db, 'year'), {
       year: currYear,
-      total: 0
+      total: amount
     })
     year = {
       yearId: newYear.id,
