@@ -4,7 +4,6 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import db from "@/firebase/index"
 import { DailySpent } from '@/type/dailySpent';
 import { SpendingItem } from '@/type/SpendingItems';
-import moment from 'moment';
 import _ from "lodash"
 
 // You can name the return value of `defineStore()` anything you want, but it's best to use the name of the store and surround it with `use` and `Store` (e.g. `useUserStore`, `useCartStore`, `useProductStore`)
@@ -20,8 +19,8 @@ const useDailtSpentPerMonthStore = defineStore('dailySpentPerMonth', {
       try {
         this.dailySpentArr = []
         const now = getDateNow()
+        this.month = now.currMonthName
         console.log('now', now);
-        this.month = moment.months(now.currMonth - 1); 
         const q = query(
           collection(db, "spending"), 
           where("year", "==", now.currYear),

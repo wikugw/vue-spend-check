@@ -35,8 +35,8 @@
 
 <script setup lang="ts">
 import useSpendFormStore from '@/store/spending/form';
-import { FormInstance, FormRules } from 'element-plus';
-import { reactive, computed, ref } from 'vue';
+import { ElLoading, ElNotification, FormInstance, FormRules } from 'element-plus';
+import { h, reactive, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const formStore = useSpendFormStore()
@@ -93,8 +93,18 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 }
 
 const handlePostSpending = () => {
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Menambah data pengeluaran...',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
   formStore.postSpending().then(() => {
+    loading.close()
     router.push({ name: 'home'})
+    ElNotification({
+      title: 'Success',
+      message: h('i', { style: 'color: teal' }, 'Berhasil menambah pengeluaran'),
+    })
   })
 }
 
