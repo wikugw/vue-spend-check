@@ -14,6 +14,7 @@ const useCurrentMonthSpendingStore = defineStore('currentMonthSpendding', {
   actions: {
     async getCurrentMonthSpending() {
       try {
+        this.month = ''
         const now = getDateNow()
         // console.log('now', now);
         const q = query(
