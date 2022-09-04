@@ -27,7 +27,6 @@
             </el-form-item>
           </div>  
         </div>
-        <button @click.prevent="resetForm(ruleFormRef)" class="text-white bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-1 my-1">Back</button>
         <button @click.prevent="resetForm(ruleFormRef)" class="text-white bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-1 my-1">Reset</button>
         <button @click.prevent="submitForm(ruleFormRef)" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mx-1 my-1">Submit</button>
     </el-form>
@@ -37,6 +36,7 @@
 <script setup lang="ts">
 import useSpendFormStore from '@/store/spending/form';
 import { ElLoading, ElNotification, FormInstance, FormRules } from 'element-plus';
+import Swal from 'sweetalert2';
 import { h, reactive, computed, ref, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -94,18 +94,29 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 }
 
 const handlePostSpending = () => {
-  const loading = ElLoading.service({
-    lock: true,
-    text: 'Menambah data pengeluaran...',
-    background: 'rgba(0, 0, 0, 0.7)',
-  })
-  formStore.postSpending().then(() => {
-    loading.close()
-    router.push({ name: 'home'})
-    ElNotification({
-      title: 'Success',
-      message: h('i', { style: 'color: teal' }, 'Berhasil menambah pengeluaran'),
-    })
+  Swal.fire({
+    title: 'Apakah anda menambah pengeluaran ini?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Batal',
+  }).then( async (result)=> {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Menambah data pengeluaran...',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
+      formStore.postSpending().then(() => {
+        loading.close()
+        router.push({ name: 'home'})
+        ElNotification({
+          title: 'Success',
+          message: h('i', { style: 'color: teal' }, 'Berhasil menambah pengeluaran'),
+        })
+      })
+    }
   })
 }
 

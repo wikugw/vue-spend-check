@@ -37,6 +37,7 @@
 <script setup lang="ts">
 import useSpendFormStore from '@/store/spending/form';
 import { ElLoading, ElNotification, FormInstance, FormRules } from 'element-plus';
+import Swal from 'sweetalert2';
 import { h, reactive, computed, ref, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -94,18 +95,29 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 }
 
 const handlePostSpending = () => {
-  const loading = ElLoading.service({
-    lock: true,
-    text: 'Menambah data pengeluaran...',
-    background: 'rgba(0, 0, 0, 0.7)',
-  })
-  formStore.putSpending().then(() => {
-    loading.close()
-    handleBackToHome()
-    ElNotification({
-      title: 'Success',
-      message: h('i', { style: 'color: teal' }, 'Berhasil menambah pengeluaran'),
-    })
+  Swal.fire({
+    title: 'Apakah anda memperbarui pengeluaran ini?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Batal',
+  }).then( async (result)=> {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Memperbarui data pengeluaran...',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
+      formStore.putSpending().then(() => {
+        loading.close()
+        handleBackToHome()
+        ElNotification({
+          title: 'Success',
+          message: h('i', { style: 'color: teal' }, 'Berhasil memperbarui pengeluaran'),
+        })
+      })
+    }
   })
 }
 

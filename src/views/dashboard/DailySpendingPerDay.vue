@@ -23,6 +23,7 @@ import { SpendingItem } from '@/type/SpendingItems';
 import useSpendFormStore from '@/store/spending/form';
 import { useRouter } from 'vue-router';
 import useDashboardStore from '@/store/dashboard/useDashboardStore'
+import Swal from 'sweetalert2';
 
 const store = useDailtSpentPerMonthStore()
 const router = useRouter()
@@ -49,19 +50,30 @@ const handleRedirectEdit = (item: SpendingItem) => {
 }
 
 const handleRemove = async (item: SpendingItem) => {
-  const loading = ElLoading.service({
-    lock: true,
-    text: 'Menghapus data pengeluaran...',
-    background: 'rgba(0, 0, 0, 0.7)',
+  Swal.fire({
+    title: 'Apakah anda ingin menghapus pengeluaran ini?',
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Batal',
+  }).then( async (result)=> {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      const loading = ElLoading.service({
+        lock: true,
+        text: 'Menghapus data pengeluaran...',
+        background: 'rgba(0, 0, 0, 0.7)',
+      })
+      await store.removeSpendingItem(item).then(() => {
+        loading.close()
+        ElNotification({
+          title: 'Success',
+          message: h('i', { style: 'color: teal' }, 'Berhasil menghapus pengeluaran'),
+        })
+      })
+      dashboardStore.setIsPageReload(true)
+    }
   })
-  await store.removeSpendingItem(item).then(() => {
-    loading.close()
-    ElNotification({
-      title: 'Success',
-      message: h('i', { style: 'color: teal' }, 'Berhasil menghapus pengeluaran'),
-    })
-  })
-  dashboardStore.setIsPageReload(true)
 }
 
 watch(() => dashboardStore.isPageReload, (first) => {
